@@ -18,6 +18,7 @@ public class StreetMap extends GraphAdjList<Integer, Integer, Double> {
     // YOUR CODE HERE:
     
     private static record VertexInfo(double distance, int previous) { }
+    
     // if there is no previous vertex, 'previous' is set to -1
     private final int NO_PREVIOUS = -1;
 
@@ -94,10 +95,11 @@ public class StreetMap extends GraphAdjList<Integer, Integer, Double> {
 
     // draw a path from the starting vertex to 'point'
     private void pathFromStart(HashMap<Integer, VertexInfo> info, int point, Color color) {
+        System.out.println("pathFromStart running");
         // set the color of vertex 'point' to 'color'
         // YOUR CODE HERE:
         getVertex(point).setColor(color);
-
+        
         while (info.get(point).previous() != NO_PREVIOUS) {
             // set 'point' to the vertex before it
             // then set the color of vertex 'point' to 'color'
@@ -112,7 +114,7 @@ public class StreetMap extends GraphAdjList<Integer, Integer, Double> {
     public void shortestPath(int start, int end, Color color) {
         HashMap<Integer, VertexInfo> info = new HashMap<>();
         HashSet<Integer> unvisited = new HashSet<>();
-
+        System.out.println("1");
         for (int i = 0; i < numVertices; i++) {
             // add 'i' to 'unvisited'
             // YOUR CODE HERE:
@@ -122,24 +124,34 @@ public class StreetMap extends GraphAdjList<Integer, Integer, Double> {
             // otherwise
             // the 'previous' field should be NO_PREVIOUS
             // YOUR CODE HERE:
-            if (i == start)
+            
+            if (i == start) {
                 info.put(i, new VertexInfo(0, NO_PREVIOUS));
-            else
+                
+            }
+            else 
                 info.put(i, new VertexInfo(Double.POSITIVE_INFINITY, NO_PREVIOUS));
         }
+        
 
         while (true) {
             int current = nearestUnvisitedVertex(info, unvisited);
-
+            System.out.println("current: " + current);
+            System.out.println("end: " + end);
             // if the distance value of 'current' is infinity, quit the method with a
             // 'return' statement
             // YOUR CODE HERE:
-            if (info.get(current).distance() == Double.POSITIVE_INFINITY)
+           
+            if (info.get(current).distance() == Double.POSITIVE_INFINITY){
+                System.out.println("quit method");
                 return;
+            
+            }
             // if the current vertex is 'end', use 'pathFromStart' to draw a path
             // then quit the method with a 'return' statement
             // YOUR CODE HERE:
             if (info.get(current).equals(info.get(end))) {
+                System.out.println("draw path");
                 pathFromStart(info, current, color);
             }
 
@@ -150,9 +162,11 @@ public class StreetMap extends GraphAdjList<Integer, Integer, Double> {
                 // YOUR CODE HERE:
 
                 int vertex = edge.getTo();
-                if (!unvisited.contains(vertex))
+                System.out.println("vertex: " + vertex);
+                if (!unvisited.contains(vertex)){
+                    System.out.println("continue to edge");
                     continue;
-
+                }
                 // calculate an alternative distance (distance to 'current' + length ofSSS edge)
                 // if the alternative is less than the distance already known,
                 // create a new VertexInfo object associated with 'vertex'; the 'distance' field
@@ -162,12 +176,14 @@ public class StreetMap extends GraphAdjList<Integer, Integer, Double> {
 
                 double altD = info.get(current).distance() + edge.getEdgeData();
                 if (altD < info.get(vertex).distance()) {
+                    System.out.println("altD");
                     info.put(vertex, new VertexInfo(altD, current));
                 }
             }
 
             // remove 'current' from 'unvisited'
             // YOUR CODE HERE:
+            //System.out.println("remove current");
             unvisited.remove(current);
 
         }
