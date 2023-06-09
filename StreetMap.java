@@ -40,6 +40,7 @@ public class StreetMap extends GraphAdjList<Integer, Integer, Double> {
             double x = vertices[i].getCartesian_coord()[0];
             double y = vertices[i].getCartesian_coord()[1];
             getVertex(i).setLocation(x, y);
+            //WORKS System.out.println(getVertex(i).getLocationX() + ", " + getVertex(i).getLocationY());
 
         }
 
@@ -50,6 +51,7 @@ public class StreetMap extends GraphAdjList<Integer, Integer, Double> {
             // YOUR CODE HERE:
             addEdge(edge.getSource(), edge.getDestination(), edge.getDistance());
             addEdge(edge.getDestination(), edge.getSource(), edge.getDistance());
+            //WORKS System.out.println(edge.getDistance());
         }
     }
 
@@ -74,7 +76,7 @@ public class StreetMap extends GraphAdjList<Integer, Integer, Double> {
                 index = i;
             }
         }
-        
+        //System.out.println("INDEX: " + index);
         return index;
     }
 
@@ -86,7 +88,7 @@ public class StreetMap extends GraphAdjList<Integer, Integer, Double> {
         
         double distance = info.get(nearestKey).distance();
         for (int i = 0; i < unvisited.size(); i++) {
-            System.out.println(info.get(i).distance());
+            //System.out.println(info.get(i).distance());
             if (info.get(i).distance() < distance) {
                 nearestKey = i;
                 distance = info.get(nearestKey).distance();
@@ -118,19 +120,22 @@ public class StreetMap extends GraphAdjList<Integer, Integer, Double> {
     public void shortestPath(int start, int end, Color color) {
         HashMap<Integer, VertexInfo> info = new HashMap<>();
         HashSet<Integer> unvisited = new HashSet<>();
-        System.out.println("shortestPathRun");
+        System.out.println("START: " + start);
         for (int i = 0; i < numVertices; i++) {
             // add 'i' to 'unvisited'
             // YOUR CODE HERE:
             unvisited.add(i);
+            
             // add a VertexInfo object to 'info' with key 'i'
             // the 'distance' field should be 0 if 'i' is the start vertex, and infinity
             // otherwise
             // the 'previous' field should be NO_PREVIOUS
             // YOUR CODE HERE:
-
+            
             if (i == start) {
                 info.put(i, new VertexInfo(0, NO_PREVIOUS));
+                System.out.println(info.get(i));
+                //System.out.println("i = start");
 
             } else
                 info.put(i, new VertexInfo(Double.POSITIVE_INFINITY, NO_PREVIOUS));
@@ -138,7 +143,9 @@ public class StreetMap extends GraphAdjList<Integer, Integer, Double> {
 
         while (true) {
             int current = nearestUnvisitedVertex(info, unvisited);
+
             System.out.println("current: " + current);
+
             // System.out.println("end: " + end);
             // if the distance value of 'current' is infinity, quit the method with a
             // 'return' statement
@@ -152,9 +159,12 @@ public class StreetMap extends GraphAdjList<Integer, Integer, Double> {
             // if the current vertex is 'end', use 'pathFromStart' to draw a path
             // then quit the method with a 'return' statement
             // YOUR CODE HERE:
+            //System.out.println("current: " + info.get(current));
+            //System.out.println("end: " + info.get(end));
             if (info.get(current).equals(info.get(end))) {
                 System.out.println("draw path");
                 pathFromStart(info, current, color);
+                return;
             }
 
             for (Edge<Integer, Double> edge : this.getAdjacencyList(current)) {
